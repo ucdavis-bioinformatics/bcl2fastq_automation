@@ -22,7 +22,7 @@ while (<$samp>) {
 	$project = $data[8];
 
 	if (!exists $sampfiles{$project}) {
-		open($sampfiles{$project}, ">$project.SampleSheet.csv");
+		open($sampfiles{$project}, ">$ARGV[0]/$project.SampleSheet.csv");
 		print {$sampfiles{$project}} "$dline$header";
 	}
 

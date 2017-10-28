@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+$out_base = "/share/dnatech/hiseq-fastq";
+
 $datadir = $ARGV[0];
 opendir ($dh,$datadir);
 @dirs = grep {-d "$datadir/$_" && ! /^\.{1,2}$/} readdir($dh);
@@ -29,9 +31,12 @@ foreach $dir (@dirs) {
 
     if (-e "$datadir/$dir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz") {
         #run is ready for bcl2fastq
+        ($run_num)=$dir=~/_run(\d+)/;
+        $samplesheet = $run_num . "_SampleSheet.csv";
+        $outputfolder = "$out_base/$dir";
         system ("touch $datadir/$dir/running_flag");
-        system ("split_sample_sheet.pl $datadir/$dir $samplesheet");
-        system ("run_bcl2fastq.pl $datadir/$dir/RunInfo.xml $samplesheet $datadir/$dir $outputfolder");
+        system ("split_sample_sheet.pl $datadir/$dir $datadir/$dir/$samplesheet");
+        system ("run_bcl2fastq.pl $datadir/$dir/RunInfo.xml $datadir/$dir/$samplesheet $datadir/$dir $outputfolder");
     }
 }
 
