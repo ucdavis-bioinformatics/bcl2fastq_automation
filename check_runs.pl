@@ -29,6 +29,7 @@ foreach $dir (@dirs) {
     close($ri);
 
 
+    # check if final bcl file has been generated
     if (-e "$datadir/$dir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz") {
         #run is ready for bcl2fastq
         ($run_num)=$dir=~/_run(\d+)/;
@@ -39,5 +40,3 @@ foreach $dir (@dirs) {
         system ("run_bcl2fastq.pl $datadir/$dir/RunInfo.xml $datadir/$dir/$samplesheet $datadir/$dir $outputfolder");
     }
 }
-
-
