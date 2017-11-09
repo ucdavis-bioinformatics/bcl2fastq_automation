@@ -104,19 +104,26 @@ while (<$ss>) {
 #--sample-sheet $samplesheet \\
 #--runfolder-dir $runfolder \\
 #--output-dir $outfolder \\
-#--stats-dir $statsfolder \\
-#--reports-dir $reportfolder \\
+#--stats-dir $outfolder/Stats \\
+#--reports-dir $outfolder/Reports \\
 #--create-fastq-for-index-reads \\
 #--ignore-missing-positions \\
 #--ignore-missing-controls \\
 #--ignore-missing-filter \\
 #--ignore-missing-bcls \\
 #--barcode-mismatches $mismatch \\
-#--loading-threads 4 \\
-#--demultiplexing-threads 12 \\
-#--processing-threads 28 \\
-#--writing-threads 4 \\
+#--loading-threads 2 \\
+#--processing-threads 14 \\
+#--writing-threads 2 \\
 #--use-bases-mask $base_mask
 #EOF
 
-system("sbatch run_bcl2fastq.slurm $samplesheet $runfolder $outfolder $projectfolder $mismatch $base_mask");
+$command = "bcl2fastq --sample-sheet $samplesheet --runfolder-dir $runfolder --output-dir $outfolder --stats-dir $outfolder/Stats --reports-dir $outfolder/Reports --create-fastq-for-index-reads --ignore-missing-positions --ignore-missing-controls --ignore-missing-filter --ignore-missing-bcls --barcode-mismatches $mismatch --loading-threads 2 --processing-threads 14 --writing-threads 2 --use-bases-mask $base_mask";
+
+print "$command\n";
+
+$ret = system($command);
+exit($ret/256);
+
+#system("sbatch run_bcl2fastq.slurm $samplesheet $runfolder $outfolder $projectfolder $mismatch $base_mask");
+#print("sbatch run_bcl2fastq.slurm $samplesheet $runfolder $outfolder $projectfolder $mismatch $base_mask\n");
