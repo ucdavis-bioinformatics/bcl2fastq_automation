@@ -35,7 +35,7 @@ while (<$ss>) {
     $index1 = $data[5];
     $index2 = $data[7];
     $project = $data[8];
-    $runtype =$data[10];
+    $runtype = $data[10];
 
     if ($index1 ne "" && length($index1) > $runinfo{2}) {
         print STDERR "Error: Index $index1 is too long. Should be $runinfo{2}bp or less.\n";
