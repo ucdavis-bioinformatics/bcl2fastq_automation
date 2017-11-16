@@ -41,7 +41,7 @@ foreach $rundir (@dirs) {
         system ("mkdir -p $outputfolder/flags");
         system ("touch $outputfolder/flags/running_flag");
         system ("$script_base/split_sample_sheet.pl $run_base/$rundir $run_base/$rundir/$samplesheet $out_base");
-        system ("sbatch $script_base/run_bcl2fastq.slurm $run_base/$rundir $outputfolder");
+        system ("sbatch --job-name=bcl2fastq_$rundir --output=$outputfolder/slurm_\%a.out $script_base/run_bcl2fastq.slurm $run_base/$rundir $outputfolder");
         #system ("run_bcl2fastq.pl $datadir/$dir/RunInfo.xml $datadir/$dir/$samplesheet $datadir/$dir $outputfolder");
     }
 }

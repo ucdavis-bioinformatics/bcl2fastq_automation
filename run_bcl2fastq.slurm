@@ -1,7 +1,6 @@
 #!/bin/bash
 
 #SBATCH --array=1-8
-#SBATCH --job-name=bcl2fastq # Job name
 #SBATCH --nodes=1
 #SBATCH --time=180
 #SBATCH --cpus-per-task=24 # Number of cores
@@ -21,6 +20,8 @@ echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
 samplesheet=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${outfolder}/all_sample_sheets.txt`
 
 projectfolder=${samplesheet%.SampleSheet.csv}
+
+ln -s ${outfolder}/slurm_${SLURM_ARRAY_TASK_ID}.out ${projectfolder}.slurm.out
 
 echo run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder

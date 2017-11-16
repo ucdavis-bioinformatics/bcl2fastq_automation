@@ -36,7 +36,7 @@ while (<$samp>) {
 
 #print STDERR "data: ".$#data."\n";
 
-	print {$sampfiles{$project}} "$data[0],$data[1],$rundir.$data[1],".join(',',@data[3 .. $#data])."\n";
+	print {$sampfiles{$project}} "$data[0],$data[1],$rundir-$data[1],".join(',',@data[3 .. $#data])."\n";
 }
 close($task_array);
 
