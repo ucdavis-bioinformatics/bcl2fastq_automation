@@ -15,6 +15,7 @@ module load bcl2fastq
 
 runfolder=$1
 outfolder=$2
+scriptfolder=$3
 
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
 samplesheet=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${outfolder}/all_sample_sheets.txt`
@@ -24,7 +25,7 @@ projectfolder=${samplesheet%.SampleSheet.csv}
 ln -s ${outfolder}/slurm_${SLURM_ARRAY_TASK_ID}.out ${projectfolder}.slurm.out
 
 echo run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
-run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
+${scriptfolder}/run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 
 if [ $? -ne 0 ]
 then
