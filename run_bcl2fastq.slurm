@@ -18,19 +18,20 @@ runfolder=$1
 outfolder=$2
 
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
-samplesheet=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${runfolder}/all_sample_sheets.txt`
+samplesheet=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${outfolder}/all_sample_sheets.txt`
 
 projectfolder=${samplesheet%.SampleSheet.csv}
 
+echo run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 
 if [ $? -ne 0 ]
 then
-    touch ${runfolder}/flags/error_flag$SLURM_ARRAY_TASK_ID
+    touch ${outfolder}/flags/error_flag$SLURM_ARRAY_TASK_ID
 fi
 
 cp ${samplesheet} ${projectfolder}
-touch ${runfolder}/flags/done_flag$SLURM_ARRAY_TASK_ID
+touch ${outfolder}/flags/done_flag$SLURM_ARRAY_TASK_ID
 
 end=`date +%s`
 runtime=$((end-start))
