@@ -5,6 +5,7 @@
 #SBATCH --time=180
 #SBATCH --cpus-per-task=24 # Number of cores
 #SBATCH --mem=8000 # Memory pool for all cores (see also --mem-per-cpu)
+#SBATCH --partition=dev,gpu,intel,assembly
 
 start=`date +%s`
 hostname

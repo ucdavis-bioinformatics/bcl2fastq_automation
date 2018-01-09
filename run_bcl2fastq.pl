@@ -34,8 +34,6 @@ while (<$ss>) {
     $lane = $data[0];
     $index1 = $data[5];
     $index2 = $data[7];
-    $project = $data[8];
-    $runtype = $data[10];
 
     if ($index1 ne "" && length($index1) > $runinfo{2} && exists $runinfo{2}) {
         print STDERR "Error: Index $index1 is too long. Should be $runinfo{2}bp or less.\n";
@@ -48,13 +46,13 @@ while (<$ss>) {
     }
 
     if ($firstline == 0) {
+        $project = $data[8];
+        $runtype = scalar(@data) < 11 ? "illumina" : lc($data[10]);
         $projectfolder = "$outfolder/$project";
 
-        if ($data[11] ne "") {
-            $mismatch = $data[11];
-        }
+        $mismatch = scalar(@data) < 12 || $data[11] eq "" ? 1 : $data[11];
 
-        if ($runtype eq "Illumina") {
+        if ($runtype eq "illumina") {
             if (exists $runinfo{1}) {
                 $base_mask .= "y".($runinfo{1}-1)."n";
             }
@@ -89,7 +87,7 @@ while (<$ss>) {
                 $base_mask .= ",y".($runinfo{4}-1)."n";
             }
 
-        } elsif ($runtype eq "10X") {
+        } elsif ($runtype eq "10x") {
               $base_mask = "y26,i8,y98";
         }
           

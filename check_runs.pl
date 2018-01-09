@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 
 $out_base = "/share/biocore/hiseq-fastq";
-$run_base = "/share/dnatech/hiseq";
+#$run_base = "/share/dnatech/hiseq";
+$run_base = "/share/illumina/hiseq";
 $script_base = "/share/biocore/joshi/projects/bcl2fastq_automation";
 
 opendir ($dh,$run_base);
@@ -10,7 +11,14 @@ closedir($dh);
 
 foreach $rundir (@dirs) {
 #    print "$dir\n";
+    # check flags
     if (-e "$out_base/$rundir/flags/done_flag1" || -e "$out_base/$rundir/flags/done_flag2" || -e "$out_base/$rundir/flags/done_flag3" || -e "$out_base/$rundir/flags/done_flag4" || -e "$out_base/$rundir/flags/done_flag5" || -e "$out_base/$rundir/flags/done_flag6" || -e "$out_base/$rundir/flags/done_flag7" || -e "$out_base/$rundir/flags/done_flag8" || -e "$out_base/$rundir/flags/running_flag") {next;}
+
+    ($run_num)=$rundir=~/_run(\d+)/;
+    $samplesheet = $run_num . "_SampleSheet.csv";
+
+    # check if sample sheet exists
+    if (! -e "$out_base/$rundir/$samplesheet") {next;}
 
     $numcycles=0;
     open($ri, "<$run_base/$rundir/RunInfo.xml");

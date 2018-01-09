@@ -15,8 +15,8 @@ my %sampfiles;
 if (! -e "$out_base/$rundir") {
     system ("mkdir $out_base/$rundir");
 }
-open($task_array,">$out_base/$rundir/all_sample_sheets.txt");
 
+open($task_array,">$out_base/$rundir/all_sample_sheets.txt");
 open($samp, "cat $ssfile | sed 's/\\r/\\n/g' | grep -v ^\$ |");
 $dline=<$samp>;
 $header=<$samp>;
@@ -39,6 +39,7 @@ while (<$samp>) {
 	print {$sampfiles{$project}} "$data[0],$data[1],$rundir-$data[1],".join(',',@data[3 .. $#data])."\n";
 }
 close($task_array);
+close($samp);
 
 foreach $project (keys %sampfiles) {
 	close($sampfiles{$project});
