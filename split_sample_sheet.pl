@@ -11,6 +11,8 @@ $rundir = basename($ARGV[0]);
 $ssfile = $ARGV[1];
 $out_base = $ARGV[2];
 
+#print STDERR "Running split sample sheet with $rundir, $ssfile, $out_base\n";
+
 my %sampfiles;
 if (! -e "$out_base/$rundir") {
     system ("mkdir $out_base/$rundir");

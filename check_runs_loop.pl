@@ -24,7 +24,7 @@ while (1) {
         $samplesheet = $run_num . "_SampleSheet.csv";
 
         # check if sample sheet exists
-        if (! -e "$out_base/$rundir/$samplesheet") {next;}
+        if (! -e "$run_base/$rundir/$samplesheet") {next;}
 
         $numcycles=0;
         open($ri, "<$run_base/$rundir/RunInfo.xml");
