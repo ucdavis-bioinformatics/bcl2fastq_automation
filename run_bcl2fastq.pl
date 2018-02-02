@@ -124,7 +124,7 @@ while (<$ss>) {
 #--use-bases-mask $base_mask
 #EOF
 
-$command = "bcl2fastq --sample-sheet $samplesheet --runfolder-dir $runfolder --output-dir $outfolder --stats-dir $projectfolder/Stats --reports-dir $projectfolder/Reports --create-fastq-for-index-reads --ignore-missing-positions --ignore-missing-controls --ignore-missing-filter --ignore-missing-bcls --barcode-mismatches $mismatch --loading-threads 2 --processing-threads 14 --writing-threads 2 --use-bases-mask $base_mask";
+$command = "bcl2fastq --sample-sheet $samplesheet --runfolder-dir $runfolder --output-dir $outfolder --stats-dir $projectfolder/Stats --reports-dir $projectfolder/Reports --ignore-missing-positions --ignore-missing-controls --ignore-missing-filter --ignore-missing-bcls --barcode-mismatches $mismatch --loading-threads 2 --processing-threads 14 --writing-threads 2 --use-bases-mask $base_mask";
 
 print "$command\n";
 
