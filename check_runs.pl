@@ -20,7 +20,7 @@ foreach $rundir (@dirs) {
 
     # check if sample sheet exists
     if (! -e "$run_base/$rundir/$samplesheet") {
-        print STDERR "Sample sheet not found for $rundir... skipping."
+        print STDERR "Sample sheet not found for $rundir... skipping.";
         next;
     }
 
@@ -52,11 +52,6 @@ foreach $rundir (@dirs) {
         chomp;
         @data = split(/,/);
         $project = $data[8];
-        $flags{$project}=1;
-    }
-    close($ss);
-
-    foreach $project (keys %flags) {
 
         if (-e "$out_base/$rundir/flags/done__$project" || -e "$out_base/$rundir/flags/running__$project") {next;}
 
@@ -69,4 +64,5 @@ foreach $rundir (@dirs) {
         system ("sbatch --job-name=bcl2fastq_${rundir}_$project --output=$outputfolder/slurm.$project.out $script_base/run_bcl2fastq.slurm $run_base/$rundir $outputfolder $script_base $outputfolder/$project.SampleSheet.csv $project");
         #system ("run_bcl2fastq.pl $datadir/$dir/RunInfo.xml $datadir/$dir/$samplesheet $datadir/$dir $outputfolder");
     }
+    close($ss);
 }
