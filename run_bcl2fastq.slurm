@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#SBATCH --array=1-8
 #SBATCH --nodes=1
 #SBATCH --time=180
 #SBATCH --cpus-per-task=36 # Number of cores
@@ -17,24 +16,19 @@ module load bcl2fastq
 runfolder=$1
 outfolder=$2
 scriptfolder=$3
-
-echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
-samplesheet=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${outfolder}/all_sample_sheets.txt`
-
-projectfolder=${samplesheet%.SampleSheet.csv}
-
-ln -s ${outfolder}/slurm_${SLURM_ARRAY_TASK_ID}.out ${projectfolder}.slurm.out
+$samplesheet=$4
+$project=$5
 
 echo run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 ${scriptfolder}/run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 
 if [ $? -ne 0 ]
 then
-    touch ${outfolder}/flags/error_flag$SLURM_ARRAY_TASK_ID
+    touch ${outfolder}/flags/error__$project
 fi
 
-cp ${samplesheet} ${projectfolder}
-touch ${outfolder}/flags/done_flag$SLURM_ARRAY_TASK_ID
+touch ${outfolder}/flags/done__$project
+rm ${outfolder}/flags/running__$project
 
 end=`date +%s`
 runtime=$((end-start))
