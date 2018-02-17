@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-#$out_base = "/share/biocore/hiseq_fastq_runs";
-$out_base = "/share/biocore/hiseq-fastq";
-#$run_base = "/share/dnatech/hiseq";
-$run_base = "/share/illumina/hiseq";
+$out_base = "/share/biocore/hiseq_fastq_runs";
+#$out_base = "/share/biocore/hiseq-fastq";
+$run_base = "/share/dnatech/hiseq";
+#$run_base = "/share/illumina/hiseq";
 $script_base = "/share/biocore/joshi/projects/bcl2fastq_automation";
 
 ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
@@ -64,7 +64,7 @@ foreach $rundir (@dirs) {
         $outputfolder = "$out_base/$rundir";
         print STDERR "Running bcl2fastq for $out_base/$rundir/$project...\n";
         if (! -e "$outputfolder/flags") {system ("mkdir -p $outputfolder/flags");}
-        system ("touch $outputfolder/flags/running_$project");
+        system ("touch $outputfolder/flags/running__$project");
         system ("$script_base/get_project_sample_sheet.pl $run_base/$rundir $run_base/$rundir/$samplesheet $out_base $project");
         system ("sbatch --job-name=bcl2fastq_${rundir}_$project --output=$outputfolder/slurm.$project.out $script_base/run_bcl2fastq.slurm $run_base/$rundir $outputfolder $script_base $outputfolder/$project.SampleSheet.csv $project");
     }

@@ -2,9 +2,9 @@
 
 #SBATCH --nodes=1
 #SBATCH --time=180
-#SBATCH --cpus-per-task=36 # Number of cores
+#SBATCH --ntasks=18 # Number of cores
 #SBATCH --mem=8000 # Memory pool for all cores (see also --mem-per-cpu)
-#SBATCH --partition=dev,gpu,intel,assembly
+# #SBATCH --partition=dev,gpu,intel,assembly
 
 start=`date +%s`
 hostname
@@ -16,8 +16,8 @@ module load bcl2fastq
 runfolder=$1
 outfolder=$2
 scriptfolder=$3
-$samplesheet=$4
-$project=$5
+samplesheet=$4
+project=$5
 
 echo run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
 ${scriptfolder}/run_bcl2fastq.pl $runfolder/RunInfo.xml $samplesheet $runfolder $outfolder
