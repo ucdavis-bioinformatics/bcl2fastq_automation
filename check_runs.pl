@@ -64,6 +64,7 @@ foreach $rundir (@dirs) {
         $outputfolder = "$out_base/$rundir";
         print STDERR "Running bcl2fastq for $out_base/$rundir/$project...\n";
         if (! -e "$outputfolder/flags") {system ("mkdir -p $outputfolder/flags");}
+        if (-e "$outputfolder/$project") {system ("rm -rf $outputfolder/$project");}
         system ("touch $outputfolder/flags/running__$project");
         system ("$script_base/get_project_sample_sheet.pl $run_base/$rundir $run_base/$rundir/$samplesheet $out_base $project");
         system ("sbatch --job-name=bcl2fastq_${rundir}_$project --output=$outputfolder/slurm.$project.out $script_base/run_bcl2fastq.slurm $run_base/$rundir $outputfolder $script_base $outputfolder/$project.SampleSheet.csv $project");

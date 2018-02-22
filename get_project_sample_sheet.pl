@@ -23,7 +23,7 @@ open($samp, "cat $ssfile | sed 's/\\r/\\n/g' | grep -v ^\$ |");
 $dline=<$samp>;
 $header=<$samp>;
 
-open ($outfile,">$out_base/$rundir/$project.SampleSheet.csv");
+open ($outfile,">$out_base/$rundir/$project_id.SampleSheet.csv");
 print $outfile "$dline$header";
 while (<$samp>) {
 	chomp;
