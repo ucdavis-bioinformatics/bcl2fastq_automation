@@ -60,7 +60,7 @@ while (1) {
             if (exists $found{$project}) {next;}
             $found{$project}=1;
 
-            if (-e "$out_base/$rundir/flags/done__$project" || -e "$out_base/$rundir/flags/running__$project") {next;}
+            if (-e "$out_base/$rundir/flags/done__$project" || -e "$out_base/$rundir/flags/running__$project" || -e "$out_base/$rundir/flags/error__$project") {next;}
 
             #project is ready for bcl2fastq
             $outputfolder = "$out_base/$rundir";
