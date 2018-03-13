@@ -20,7 +20,7 @@ if (! -e "$out_base/$rundir") {
     system ("mkdir $out_base/$rundir");
 }
 
-($machine_id) = $rundir =~ /^.+_(.+?)_run\d+/;
+($flowcell_id) = $rundir =~ /^.+_(.+?)_run\d+/;
 
 open($samp, "cat $ssfile | sed 's/\\r/\\n/g' | grep -v ^\$ |");
 $dline=<$samp>;
@@ -52,7 +52,7 @@ while (<$samp>) {
     		$data[7] = "";
     	}
 
-		print $outfile "$data[0],$data[1],$machine_id-$data[1],".join(',',@data[3 .. $#data]);
+		print $outfile "$data[0],$data[1],$flowcell_id-$data[1],".join(',',@data[3 .. $#data]);
 		if ($firstline == 0) {
 			print $outfile ",$i1_length,$i2_length";
 			$firstline=1;
