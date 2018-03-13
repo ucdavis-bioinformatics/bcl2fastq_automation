@@ -12,6 +12,7 @@ $ssfile = $ARGV[1];
 $out_base = $ARGV[2];
 $project_id = $ARGV[3];
 
+$firstline=0;
 #print STDERR "Running split sample sheet with $rundir, $ssfile, $out_base, $project_id\n";
 
 my %sampfiles;
@@ -51,7 +52,12 @@ while (<$samp>) {
     		$data[7] = "";
     	}
 
-		print $outfile "$data[0],$data[1],$machine_id-$data[1],".join(',',@data[3 .. $#data]).",$i1_length,$i2_length\n";
+		print $outfile "$data[0],$data[1],$machine_id-$data[1],".join(',',@data[3 .. $#data]);
+		if ($firstline == 0) {
+			print $outfile ",$i1_length,$i2_length";
+			$firstline=1;
+		}
+		print $outfile "\n";
 	}
 }
 close($samp);

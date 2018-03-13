@@ -21,10 +21,25 @@ $outfolder = $ARGV[3];
 $mismatch = 1;
 $create_index_option="";
 
+%reads = ();
+%indexes = ();
+
 open($ri,"<$runinfo_file");
 while (<$ri>) {
-    if ($_ =~ /\<Read Number=\"(\d)\" NumCycles=\"(\d+)\"/) {
-        $runinfo{$1} = $2;
+    if ($_ =~ /\<Read Number=\"(\d)\" NumCycles=\"(\d+)\" IsIndexedRead=\"(\w)\"/) {
+        if ($3 eq "N") {
+            if (!exists $reads{"R1"}) {
+                $reads{"R1"} = $2;
+            } else {
+                $reads{"R2"} = $2;
+            }
+        } else {
+            if (!exists $indexes{"I1"}) {
+                $indexes{"I1"} = $2;
+            } else {
+                $indexes{"I2"} = $2;
+            }
+        }
     }
 }
 close($ri);
@@ -57,13 +72,13 @@ while (<$ss>) {
     }
 
 
-    if ($index1 ne "" && $i1len > $runinfo{2} && exists $runinfo{2}) {
-        print STDERR "Error: Index $index1 is too long. Should be $runinfo{2}bp or less.\n";
+    if ($index1 ne "" && $i1len > $indexes{"I1"} && exists $indexes{"I1"}) {
+        print STDERR "Error: Index $index1 is too long. Should be ".$indexes{"I1"}."bp or less.\n";
         exit(1);
     }
 
-    if ($index2 ne "" && $i2len > $runinfo{3} && exists $runinfo{3}) {
-        print STDERR "Error: Index $index2 is too long. Should be $runinfo{3}bp or less.\n";
+    if ($index2 ne "" && $i2len > $indexes{"I2"} && exists $indexes{"I2"}) {
+        print STDERR "Error: Index $index2 is too long. Should be ".$indexes{"I2"}."bp or less.\n";
         exit(1);
     }
 
@@ -76,49 +91,49 @@ while (<$ss>) {
 
         if (exists $bp{$runtype}) {
 
-            $type_length = exists $bp{$runtype} ? $bp{$runtype} : $runinfo{1};
+            $type_length = exists $bp{$runtype} ? $bp{$runtype} : $reads{"R1"};
 
-            if (exists $runinfo{1}) {
-                if ($runinfo{1} < $type_length) {
+            if (exists $reads{"R1"}) {
+                if ($reads{"R1"} < $type_length) {
                     print STDERR "ERROR: $runtype is longer than the read length.\n"
                 }
 
-                $n_num = $runinfo{1} - $type_length;
+                $n_num = $reads{"R1"} - $type_length;
                 $base_mask .= "y$bp{$runtype}".($n_num <= 0 ? "" : "n$n_num");
             }
 
-            if (exists $runinfo{2}) {
+            if (exists $indexes{"I1"}) {
                 if ($i1len != 0) {
-                    $n_num = $runinfo{2} - $i1len;
+                    $n_num = $indexes{"I1"} - $i1len;
                     if ($n_num > 0) {
                         $base_mask .= ",i".$i1len."n$n_num";
                     } else {
                         $base_mask .= ",i".$i1len;
                     }
                 } else {
-                    $base_mask .= ",n$runinfo{2}";
+                    $base_mask .= ",n".$indexes{"I1"};
                 }
             }
 
-            if (exists $runinfo{3}) {
+            if (exists $indexes{"I2"}) {
                 if ($i2len != 0) {
-                    $n_num = $runinfo{3} - $i2len;
+                    $n_num = $indexes{"I2"} - $i2len;
                     if ($n_num > 0) {
                         $base_mask .= ",i".$i2len."n$n_num";
                     } else {
                         $base_mask .= ",i".$i2len;
                     }
                 } else {
-                    $base_mask .= ",n$runinfo{3}";
+                    $base_mask .= ",n".$indexes{"I2"};
                 }
             }
 
-            if (exists $runinfo{4}) {
-                if ($runinfo{4} < $type_length) {
+            if (exists $reads{"R2"}) {
+                if ($reads{"R2"} < $type_length) {
                     print STDERR "ERROR: $runtype is longer than the read length.\n"
                 }
 
-                $n_num = $runinfo{4} - $type_length;
+                $n_num = $reads{"R2"} - $type_length;
                 $base_mask .= ",y$bp{$runtype}".($n_num <= 0 ? "" : "n$n_num");
             }
 
