@@ -134,7 +134,12 @@ while (<$ss>) {
                 }
 
                 $n_num = $reads{"R2"} - $type_length;
-                $base_mask .= ",y$bp{$runtype}".($n_num <= 0 ? "" : "n$n_num");
+                # if reads wanted are single end, but run is paired-end
+                if ($runtype eq "SR50" || $runtype eq "SR90" || $runtype eq "SR100") {
+                    $base_mask .= ",n".$reads{"R2"};
+                } else {
+                    $base_mask .= ",y$bp{$runtype}".($n_num <= 0 ? "" : "n$n_num");
+                }
             }
 
         } elsif ($runtype eq "10X") {

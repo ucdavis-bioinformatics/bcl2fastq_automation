@@ -13,7 +13,7 @@ while (1) {
     print STDERR "Checking for new data ($now)...\n";
 
     opendir ($dh,$run_base);
-    @dirs = grep {! /^\.{1,2}$/ && /_run\d+$/} readdir($dh);
+    @dirs = sort grep {! /^\.{1,2}$/ && /_run\d+$/} readdir($dh);
     closedir($dh);
 
     foreach $rundir (@dirs) {
@@ -45,7 +45,7 @@ while (1) {
         }
         close($ri);
 
-        print STDERR "Checking for $run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz creation...\n";
+        #print STDERR "Checking for $run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz creation...\n";
         if (! -e "$run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz") {next;}
 
         %found = ();
