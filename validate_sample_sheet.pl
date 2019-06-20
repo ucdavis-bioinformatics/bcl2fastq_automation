@@ -38,7 +38,7 @@ while (<$ri>) {
 }
 close($ri);
 
-open($ss,"cat $samplesheet | sed 's/\\r/\\n/g' |");
+open($ss,"cat $samplesheet | sed 's/\\r/\\n/g' | grep -v ^\$");
 <$ss>;
 <$ss>;
 while (<$ss>) {
@@ -50,7 +50,7 @@ while (<$ss>) {
     $project = $data[8];
 
     if ($prevproj eq "" || $prevproj ne $project) {
-        if (scalar(data) != 12) {
+        if (scalar(@data) != 12) {
             print STDERR "Error: The first line of a project has to have 12 comma-separated columns. The first line of project $project does not.\n";
         }
         $runtype = $data[10];
@@ -82,7 +82,7 @@ while (<$ss>) {
 #print STDERR "Adding index $index1 with lane $lane...\n";
 
     if (!exists $rts{$runtype}) {
-        print STDERR "Error: Runtype $runtype for project $project is invalid.\n";
+        print STDERR "Error: Unrecognized runtype $runtype for project $project.\n";
     }
 
     if (exists $reads{"R1"} && !exists $reads{"R2"} && ($runtype eq "PE100" || $runtype eq "PE150")) {
