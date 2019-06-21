@@ -49,10 +49,10 @@ while (1) {
         if (! -e "$run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz") {next;}
 
         %found = ();
-        open($ss,"<$run_base/$rundir/$samplesheet");
-        <$ss>;
-        <$ss>;
+        open($ss,"cat $run_base/$rundir/$samplesheet | sed 's/\\r/\\n/g' | grep -v ^\$ |");
         while (<$ss>) {
+            if (/^\[Data\]/ || /^Lane,Sample_ID/) {next;}
+
             chomp;
             @data = split(/,/);
             $project = $data[8];

@@ -2,8 +2,8 @@
 
 $out_base = "/share/biocore/hiseq_fastq_runs";
 #$out_base = "/share/biocore/hiseq-fastq";
-$run_base = "/share/dnatech/hiseq";
-#$run_base = "/share/illumina/hiseq";
+#$run_base = "/share/dnatech/hiseq";
+$run_base = "/share/illumina/hiseq";
 $script_base = "/share/biocore/joshi/projects/bcl2fastq_automation";
 
 ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
@@ -43,20 +43,22 @@ foreach $rundir (@dirs) {
     }
     close($ri);
 
-    print STDERR "Checking for $run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz creation...\n";
+    #print STDERR "Checking for $run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz creation...\n";
     if (! -e "$run_base/$rundir/Data/Intensities/BaseCalls/L00$lanecount/C$numcycles.1/s_${lanecount}_$surfacecount$swathcount$tilecount.bcl.gz") {next;}
 
     %found = ();
-    open($ss,"<$run_base/$rundir/$samplesheet");
-    <$ss>;
-    <$ss>;
+    open($ss,"cat $run_base/$rundir/$samplesheet | sed 's/\\r/\\n/g' | grep -v ^\$ |");
     while (<$ss>) {
+        if (/^\[Data\]/ || /^Lane,Sample_ID/) {next;}
+
         chomp;
         @data = split(/,/);
         $project = $data[8];
 
         if (exists $found{$project}) {next;}
         $found{$project}=1;
+
+if ($project eq "") {print "$_\n$run_base/$rundir/$samplesheet\n";}
 
         if (-e "$out_base/$rundir/flags/done__$project" || -e "$out_base/$rundir/flags/running__$project" || -e "$out_base/$rundir/flags/error__$project") {next;}
 
